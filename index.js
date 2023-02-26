@@ -11,7 +11,17 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-// TODO: Write Code to gather information about the development team members, and render the HTML file.
+// todo
+
+// Returns a function which increases the id by leveraging the closure and an IIFE
+
+const getId = (() => {
+  let id = 0;
+  return function () {
+    return ++id;
+  };
+})();
+
 const team = [];
 
 startProgram();
@@ -19,15 +29,15 @@ startProgram();
 async function startProgram() {
   //
 
-  const number = await inquirer.prompt([
+  let prompt = await inquirer.prompt([
     {
       type: "number",
-      name: "numOfEmployees",
+      name: "num",
       message: "How many employees are we inputting?",
     },
   ]);
 
-  const num = number.numOfEmployees;
+  const num = prompt.num;
 
   for (let index = 0; index < num; index++) {
     const employeeData = [
@@ -76,11 +86,13 @@ async function startProgram() {
     data[name] = name;
 
     if (data.role === "Manager") {
-      team.push(new Manager(`${data.name}`, 1, data.email, data.officeNumber));
+      team.push(
+        new Manager(`${data.name}`, getId(), data.email, data.officeNumber)
+      );
     } else if (data.role === "Engineer") {
-      team.push(new Engineer(`${data.name}`, 1, data.email, data.gitHub));
+      team.push(new Engineer(`${data.name}`, getId(), data.email, data.gitHub));
     } else if (data.role === "Intern") {
-      team.push(new Intern(`${data.name}`, 1, data.email, data.school));
+      team.push(new Intern(`${data.name}`, getId(), data.email, data.school));
     }
   }
 
