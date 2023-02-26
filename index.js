@@ -1,6 +1,6 @@
 const Manager = require("./lib/Manager");
-// const Engineer = require("./lib/Engineer");
-// const Intern = require("./lib/Intern");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
@@ -17,7 +17,10 @@ const team = [];
 startProgram();
 
 async function startProgram() {
-  team.push(new Employee("dan", 1, "test@test.com"));
+  team.push(new Manager("dan", 1, "test@test.com", 12343));
+  team.push(new Engineer("trovas", 1, "test@test.com", "danTrobafasd"));
+  team.push(new Intern("dante", 1, "test@test.com", "bananas"));
+  team.push(new Intern("dante", 1, "test@test.com", "bananas"));
 
   let htmlDoc = render(team);
 
