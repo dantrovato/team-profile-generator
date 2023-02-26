@@ -1,6 +1,5 @@
 // creates the team
 const generateTeam = (team) => {
-  //   console.log(team);
   // creates the manager html
   const generateManager = (manager) => {
     return `
@@ -83,7 +82,6 @@ const generateTeam = (team) => {
 
 // exports function to generate entire page
 module.exports = (team) => {
-  console.log(team);
   return `
     <!DOCTYPE html>
 <html lang="en">

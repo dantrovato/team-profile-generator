@@ -17,10 +17,66 @@ const team = [];
 startProgram();
 
 async function startProgram() {
-  team.push(new Manager("dan", 1, "test@test.com", 12343));
-  team.push(new Engineer("trovas", 1, "test@test.com", "danTrobafasd"));
-  team.push(new Intern("dante", 1, "test@test.com", "bananas"));
-  team.push(new Intern("dante", 1, "test@test.com", "bananas"));
+  // const number = await inquirer.prompt([
+  //   {
+  //     type: "number",
+  //     name: "numOfEmployees",
+  //     message: "How many employees are we inputting?",
+  //   },
+  // ]);
+
+  const employeeData = [
+    {
+      type: "list",
+      name: "role",
+      message: "Please choose a role below:",
+      choices: ["Manager", "Engineer", "Intern"],
+    },
+    {
+      type: "input",
+      name: "name",
+      message: "Enter employee's entire name",
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "Enter employee's email",
+    },
+  ];
+
+  const data = await inquirer.prompt(employeeData);
+
+  const role = data.role;
+  let name;
+  let message;
+  if (role === "Manager") {
+    name = "officeNumber";
+    message = "What is the manager's office number?";
+  } else if (role === "Engineer") {
+    name = "gitHub";
+    message = "What is the engineer's gitHub?";
+  } else if (role === "Intern") {
+    name = "school";
+    message = `What is the name of employee's school?`;
+  }
+
+  const roleSpecificQuestion = await inquirer.prompt([
+    {
+      type: "input",
+      name: name,
+      message: message,
+    },
+  ]);
+
+  data[name] = name;
+
+  if (data.role === "Manager") {
+    team.push(new Manager(`${data.name}`, 1, data.email, data.officeNumber));
+  } else if (data.role === "Engineer") {
+    team.push(new Engineer(`${data.name}`, 1, data.email, data.gitHub));
+  } else if (data.role === "Intern") {
+    team.push(new Intern(`${data.name}`, 1, data.email, data.school));
+  }
 
   let htmlDoc = render(team);
 
