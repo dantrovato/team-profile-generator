@@ -12,9 +12,9 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./src/page-template.js");
 
 // todo
+// officeNumber and school aren't grabbed
 
 // Returns a function which increases the id by leveraging the closure and an IIFE
-
 const getId = (() => {
   let id = 0;
   return function () {
@@ -27,8 +27,6 @@ const team = [];
 startProgram();
 
 async function startProgram() {
-  //
-
   let prompt = await inquirer.prompt([
     {
       type: "number",
@@ -57,42 +55,28 @@ async function startProgram() {
         name: "email",
         message: "Enter employee's email",
       },
+      {
+        type: "input",
+        name: "roleSpecificInfo",
+        message:
+          "Enter office number for Manager, gitHub for Engineer or school for Intern",
+      },
     ];
 
     const data = await inquirer.prompt(employeeData);
 
-    const role = data.role;
-    let name;
-    let message;
-    if (role === "Manager") {
-      name = "officeNumber";
-      message = "What is the manager's office number?";
-    } else if (role === "Engineer") {
-      name = "gitHub";
-      message = "What is the engineer's gitHub?";
-    } else if (role === "Intern") {
-      name = "school";
-      message = `What is the name of employee's school?`;
-    }
-
-    const roleSpecificQuestion = await inquirer.prompt([
-      {
-        type: "input",
-        name: name,
-        message: message,
-      },
-    ]);
-
-    data[name] = name;
-
     if (data.role === "Manager") {
       team.push(
-        new Manager(`${data.name}`, getId(), data.email, data.officeNumber)
+        new Manager(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
       );
     } else if (data.role === "Engineer") {
-      team.push(new Engineer(`${data.name}`, getId(), data.email, data.gitHub));
+      team.push(
+        new Engineer(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
+      );
     } else if (data.role === "Intern") {
-      team.push(new Intern(`${data.name}`, getId(), data.email, data.school));
+      team.push(
+        new Intern(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
+      );
     }
   }
 
