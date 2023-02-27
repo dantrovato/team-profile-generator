@@ -11,68 +11,131 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-// Returns a function which increases the id by leveraging the closure and an IIFE
-const getId = (() => {
-  let id = 0;
-  return function () {
-    return ++id;
-  };
-})();
+const managerQuestions = [
+  {
+    type: "inputr",
+    name: "name",
+    message: "Enter team manager's name",
+  },
+  {
+    type: "number",
+    name: "id",
+    message: "Enter employee's ID",
+  },
+  {
+    type: "input",
+    name: "email",
+    message: "Enter email address",
+  },
+  {
+    type: "number",
+    name: "officeNumber",
+    message: "Enter office number",
+  },
+  {
+    type: "list",
+    name: "action",
+    message: "Choose from the list",
+    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
+  },
+];
+
+const engineerQuestions = [
+  {
+    type: "input",
+    name: "name",
+    message: "Enter engineer's name",
+  },
+  {
+    type: "number",
+    name: "id",
+    message: "Enter ID",
+  },
+  {
+    type: "input",
+    name: "email",
+    message: "Enter email address",
+  },
+  {
+    type: "input",
+    name: "gitHub",
+    message: "Enter gitHub username",
+  },
+  {
+    type: "list",
+    name: "action",
+    message: "Choose from the list",
+    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
+  },
+];
+
+const internQuestions = [
+  {
+    type: "input",
+    name: "name",
+    message: "Enter intern's name",
+  },
+  {
+    type: "number",
+    name: "id",
+    message: "Enter ID",
+  },
+  {
+    type: "input",
+    name: "email",
+    message: "Enter email address",
+  },
+  {
+    type: "input",
+    name: "school",
+    message: "Enter name of school",
+  },
+  {
+    type: "list",
+    name: "action",
+    message: "Choose from the list",
+    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
+  },
+];
 
 const team = [];
 
-startProgram();
+start();
 
-async function startProgram() {
-  // get num of employees to use in the for loop below
-  let prompt = await inquirer.prompt([
-    {
-      type: "number",
-      name: "num",
-      message: "How many employees are we inputting?",
-    },
-  ]);
+async function start() {
+  const managerPrompts = await inquirer.prompt(managerQuestions);
 
-  const numEmployees = prompt.num;
+  const { name, id, email, officeNumber } = managerPrompts;
+  team.push(new Manager(name, id, email, officeNumber));
 
-  // questions to grab data from user
-  const employeeData = [
-    {
-      type: "list",
-      name: "role",
-      message: "Please choose a role below:",
-      choices: ["Manager", "Engineer", "Intern"],
-    },
-    {
-      type: "input",
-      name: "name",
-      message: "Enter employee's entire name",
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "Enter employee's email",
-    },
-    {
-      type: "input",
-      name: "roleSpecificInfo",
-      message:
-        "Enter office number for Manager, gitHub for Engineer or school for Intern",
-    },
-  ];
+  let keepAdding =
+    managerPrompts.action !== "Finish building the team" ? true : false;
 
-  for (let index = 0; index < numEmployees; index++) {
-    // object deconstructuring to extract variables from prompt
-    const { role, name, email, roleSpecificInfo } = await inquirer.prompt(
-      employeeData
-    );
+  let engineerPrompts;
+  let internPrompts;
+  let action = managerPrompts.action;
+  while (keepAdding) {
+    if (action === "Add an engineer") {
+      if (engineerPrompts) engineerPrompts.action = undefined;
+      engineerPrompts = await inquirer.prompt(engineerQuestions);
+      action = engineerPrompts.action;
+      const { name, id, email, gitHub } = engineerPrompts;
+      team.push(new Engineer(name, id, email, gitHub));
+    } else if (action === "Add an intern") {
+      if (internPrompts) internPrompts.action = undefined;
+      internPrompts = await inquirer.prompt(internQuestions);
 
-    if (role === "Manager") {
-      team.push(new Manager(name, getId(), email, roleSpecificInfo));
-    } else if (role === "Engineer") {
-      team.push(new Engineer(name, getId(), email, roleSpecificInfo));
-    } else if (role === "Intern") {
-      team.push(new Intern(name, getId(), email, roleSpecificInfo));
+      action = internPrompts.action;
+      const { name, id, email, school } = internPrompts;
+      team.push(new Engineer(name, id, email, school));
+    }
+
+    if (
+      (engineerPrompts &&
+        engineerPrompts.action === "Finish building the team") ||
+      (internPrompts && internPrompts.action === "Finish building the team")
+    ) {
+      keepAdding = false;
     }
   }
 
