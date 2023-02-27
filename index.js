@@ -11,9 +11,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-// todo
-// officeNumber and school aren't grabbed
-
 // Returns a function which increases the id by leveraging the closure and an IIFE
 const getId = (() => {
   let id = 0;
@@ -35,47 +32,47 @@ async function startProgram() {
     },
   ]);
 
-  const num = prompt.num;
+  const numEmployees = prompt.num;
 
-  for (let index = 0; index < num; index++) {
-    const employeeData = [
-      {
-        type: "list",
-        name: "role",
-        message: "Please choose a role below:",
-        choices: ["Manager", "Engineer", "Intern"],
-      },
-      {
-        type: "input",
-        name: "name",
-        message: "Enter employee's entire name",
-      },
-      {
-        type: "input",
-        name: "email",
-        message: "Enter employee's email",
-      },
-      {
-        type: "input",
-        name: "roleSpecificInfo",
-        message:
-          "Enter office number for Manager, gitHub for Engineer or school for Intern",
-      },
-    ];
+  const employeeData = [
+    {
+      type: "list",
+      name: "role",
+      message: "Please choose a role below:",
+      choices: ["Manager", "Engineer", "Intern"],
+    },
+    {
+      type: "input",
+      name: "name",
+      message: "Enter employee's entire name",
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "Enter employee's email",
+    },
+    {
+      type: "input",
+      name: "roleSpecificInfo",
+      message:
+        "Enter office number for Manager, gitHub for Engineer or school for Intern",
+    },
+  ];
 
+  for (let index = 0; index < numEmployees; index++) {
     const data = await inquirer.prompt(employeeData);
 
     if (data.role === "Manager") {
       team.push(
-        new Manager(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
+        new Manager(data.name, getId(), data.email, data.roleSpecificInfo)
       );
     } else if (data.role === "Engineer") {
       team.push(
-        new Engineer(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
+        new Engineer(data.name, getId(), data.email, data.roleSpecificInfo)
       );
     } else if (data.role === "Intern") {
       team.push(
-        new Intern(`${data.name}`, getId(), data.email, data.roleSpecificInfo)
+        new Intern(data.name, getId(), data.email, data.roleSpecificInfo)
       );
     }
   }
