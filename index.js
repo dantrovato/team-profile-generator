@@ -14,11 +14,6 @@ const managerQuestions = [
     message: "Enter team manager's name",
   },
   {
-    type: "number",
-    name: "id",
-    message: "Enter employee's ID",
-  },
-  {
     type: "input",
     name: "email",
     message: "Enter email address",
@@ -41,11 +36,6 @@ const engineerQuestions = [
     type: "input",
     name: "name",
     message: "Enter engineer's name",
-  },
-  {
-    type: "number",
-    name: "id",
-    message: "Enter ID",
   },
   {
     type: "input",
@@ -72,11 +62,6 @@ const internQuestions = [
     message: "Enter intern's name",
   },
   {
-    type: "number",
-    name: "id",
-    message: "Enter ID",
-  },
-  {
     type: "input",
     name: "email",
     message: "Enter email address",
@@ -96,19 +81,27 @@ const internQuestions = [
 
 const team = [];
 
+// generate unique id
+const getID = (() => {
+  let id = 0;
+  return function () {
+    return ++id;
+  };
+})();
+
 function addManager(prompts) {
-  const { name, id, email, officeNumber } = prompts;
-  team.push(new Manager(name, id, email, officeNumber));
+  const { name, email, officeNumber } = prompts;
+  team.push(new Manager(name, getID(), email, officeNumber));
 }
 
 function addEngineer(prompts) {
-  const { name, id, email, gitHub } = prompts;
-  team.push(new Engineer(name, id, email, gitHub));
+  const { name, email, gitHub } = prompts;
+  team.push(new Engineer(name, getID(), email, gitHub));
 }
 
 function addIntern(prompts) {
-  const { name, id, email, school } = prompts;
-  team.push(new Intern(name, id, email, school));
+  const { name, email, school } = prompts;
+  team.push(new Intern(name, getID(), email, school));
 }
 
 async function start() {
@@ -120,20 +113,15 @@ async function start() {
   let keepAdding =
     managerPrompts.action !== "Finish building the team" ? true : false;
 
-  let engineerPrompts;
-  let internPrompts;
   let action = managerPrompts.action;
 
   while (keepAdding) {
     if (action === "Add an engineer") {
-      if (engineerPrompts) engineerPrompts.action = undefined;
-      engineerPrompts = await inquirer.prompt(engineerQuestions);
+      const engineerPrompts = await inquirer.prompt(engineerQuestions);
       action = engineerPrompts.action;
       addEngineer(engineerPrompts);
     } else if (action === "Add an intern") {
-      if (internPrompts) internPrompts.action = undefined;
-      internPrompts = await inquirer.prompt(internQuestions);
-
+      const internPrompts = await inquirer.prompt(internQuestions);
       action = internPrompts.action;
       addIntern(internPrompts);
     }
