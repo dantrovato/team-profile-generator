@@ -1,16 +1,12 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-
 const render = require("./src/page-template.js");
-
 const managerQuestions = [
   {
     type: "inputr",
@@ -100,41 +96,49 @@ const internQuestions = [
 
 const team = [];
 
-start();
+function addManager(prompts) {
+  const { name, id, email, officeNumber } = prompts;
+  team.push(new Manager(name, id, email, officeNumber));
+}
+
+function addEngineer(prompts) {
+  const { name, id, email, gitHub } = prompts;
+  team.push(new Engineer(name, id, email, gitHub));
+}
+
+function addIntern(prompts) {
+  const { name, id, email, school } = prompts;
+  team.push(new Intern(name, id, email, school));
+}
 
 async function start() {
+  // collect data for manager and push inside the empty team array
   const managerPrompts = await inquirer.prompt(managerQuestions);
+  addManager(managerPrompts);
 
-  const { name, id, email, officeNumber } = managerPrompts;
-  team.push(new Manager(name, id, email, officeNumber));
-
+  // boolean to pass the while loop below to know when to stop the loop
   let keepAdding =
     managerPrompts.action !== "Finish building the team" ? true : false;
 
   let engineerPrompts;
   let internPrompts;
   let action = managerPrompts.action;
+
   while (keepAdding) {
     if (action === "Add an engineer") {
       if (engineerPrompts) engineerPrompts.action = undefined;
       engineerPrompts = await inquirer.prompt(engineerQuestions);
       action = engineerPrompts.action;
-      const { name, id, email, gitHub } = engineerPrompts;
-      team.push(new Engineer(name, id, email, gitHub));
+      addEngineer(engineerPrompts);
     } else if (action === "Add an intern") {
       if (internPrompts) internPrompts.action = undefined;
       internPrompts = await inquirer.prompt(internQuestions);
 
       action = internPrompts.action;
-      const { name, id, email, school } = internPrompts;
-      team.push(new Engineer(name, id, email, school));
+      addIntern(internPrompts);
     }
 
-    if (
-      (engineerPrompts &&
-        engineerPrompts.action === "Finish building the team") ||
-      (internPrompts && internPrompts.action === "Finish building the team")
-    ) {
+    if (action === "Finish building the team") {
       keepAdding = false;
     }
   }
@@ -149,3 +153,5 @@ async function start() {
     console.log("File has been created successfully.");
   });
 }
+
+start();
