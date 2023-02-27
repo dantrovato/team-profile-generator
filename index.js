@@ -24,6 +24,7 @@ const team = [];
 startProgram();
 
 async function startProgram() {
+  // get num of employees to use in the for loop below
   let prompt = await inquirer.prompt([
     {
       type: "number",
@@ -34,6 +35,7 @@ async function startProgram() {
 
   const numEmployees = prompt.num;
 
+  // questions to grab data from user
   const employeeData = [
     {
       type: "list",
