@@ -62,24 +62,21 @@ async function startProgram() {
   ];
 
   for (let index = 0; index < numEmployees; index++) {
-    const data = await inquirer.prompt(employeeData);
+    // object deconstructuring to extract variables from prompt
+    const { role, name, email, roleSpecificInfo } = await inquirer.prompt(
+      employeeData
+    );
 
-    if (data.role === "Manager") {
-      team.push(
-        new Manager(data.name, getId(), data.email, data.roleSpecificInfo)
-      );
-    } else if (data.role === "Engineer") {
-      team.push(
-        new Engineer(data.name, getId(), data.email, data.roleSpecificInfo)
-      );
-    } else if (data.role === "Intern") {
-      team.push(
-        new Intern(data.name, getId(), data.email, data.roleSpecificInfo)
-      );
+    if (role === "Manager") {
+      team.push(new Manager(name, getId(), email, roleSpecificInfo));
+    } else if (role === "Engineer") {
+      team.push(new Engineer(name, getId(), email, roleSpecificInfo));
+    } else if (role === "Intern") {
+      team.push(new Intern(name, getId(), email, roleSpecificInfo));
     }
   }
 
-  let htmlDoc = render(team);
+  const htmlDoc = render(team);
 
   await fs.writeFile(outputPath, htmlDoc, (err) => {
     if (err) {
