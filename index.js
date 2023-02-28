@@ -7,77 +7,9 @@ const fs = require("fs");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./src/page-template.js");
-const managerQuestions = [
-  {
-    type: "inputr",
-    name: "name",
-    message: "Enter team manager's name",
-  },
-  {
-    type: "input",
-    name: "email",
-    message: "Enter email address",
-  },
-  {
-    type: "number",
-    name: "officeNumber",
-    message: "Enter office number",
-  },
-  {
-    type: "list",
-    name: "action",
-    message: "Choose from the list",
-    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
-  },
-];
-
-const engineerQuestions = [
-  {
-    type: "input",
-    name: "name",
-    message: "Enter engineer's name",
-  },
-  {
-    type: "input",
-    name: "email",
-    message: "Enter email address",
-  },
-  {
-    type: "input",
-    name: "gitHub",
-    message: "Enter gitHub username",
-  },
-  {
-    type: "list",
-    name: "action",
-    message: "Choose from the list",
-    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
-  },
-];
-
-const internQuestions = [
-  {
-    type: "input",
-    name: "name",
-    message: "Enter intern's name",
-  },
-  {
-    type: "input",
-    name: "email",
-    message: "Enter email address",
-  },
-  {
-    type: "input",
-    name: "school",
-    message: "Enter name of school",
-  },
-  {
-    type: "list",
-    name: "action",
-    message: "Choose from the list",
-    choices: ["Add an engineer", "Add an intern", "Finish building the team"],
-  },
-];
+const managerQuestions = require("./lib/manager-questions.js");
+const engineerQuestions = require("./lib/engineer-questions.js");
+const internQuestions = require("./lib/intern-questions.js");
 
 const team = [];
 
@@ -106,7 +38,7 @@ function addIntern(prompts) {
 
 async function start() {
   // collect data for manager and push inside the empty team array
-  const managerPrompts = await inquirer.prompt(managerQuestions);
+  const managerPrompts = await inquirer.prompt(managerQuestions());
   addManager(managerPrompts);
 
   // boolean to pass the while loop below to know when to stop the loop
@@ -117,11 +49,11 @@ async function start() {
 
   while (keepAdding) {
     if (action === "Add an engineer") {
-      const engineerPrompts = await inquirer.prompt(engineerQuestions);
+      const engineerPrompts = await inquirer.prompt(engineerQuestions());
       action = engineerPrompts.action;
       addEngineer(engineerPrompts);
     } else if (action === "Add an intern") {
-      const internPrompts = await inquirer.prompt(internQuestions);
+      const internPrompts = await inquirer.prompt(internQuestions());
       action = internPrompts.action;
       addIntern(internPrompts);
     }
