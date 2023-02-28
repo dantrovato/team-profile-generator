@@ -22,19 +22,28 @@ const getID = (() => {
   };
 })();
 
+// Capitalize name
+function formatName(name) {
+  return name
+    .split(" ")
+    .map((n) => n[0].toUpperCase() + n.slice(1))
+    .join(" ");
+}
+
 function addManager(prompts) {
   const { name, email, officeNumber } = prompts;
-  team.push(new Manager(name, getID(), email, officeNumber));
+
+  team.push(new Manager(formatName(name), getID(), email, officeNumber));
 }
 
 function addEngineer(prompts) {
   const { name, email, gitHub } = prompts;
-  team.push(new Engineer(name, getID(), email, gitHub));
+  team.push(new Engineer(formatName(name), getID(), email, gitHub));
 }
 
 function addIntern(prompts) {
   const { name, email, school } = prompts;
-  team.push(new Intern(name, getID(), email, school));
+  team.push(new Intern(formatName(name), getID(), email, school));
 }
 
 async function start() {
