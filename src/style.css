@@ -1,3 +1,14 @@
 .team-heading {
-  background-color: red;
+  background-color: rgb(229, 59, 59);
+  color: white;
+}
+
+.employee-card {
+  margin: 1rem;
+  box-shadow: 10px 5px 5px rgba(28, 28, 29, 0.7);
+}
+
+.card-header {
+  background-color: rgb(66, 96, 247);
+  color: white;
 }
