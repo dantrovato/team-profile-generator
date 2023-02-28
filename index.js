@@ -52,15 +52,22 @@ async function start() {
 
   while (keepAdding) {
     if (action === "Add an engineer") {
+      // shows engineer questions
       const engineerPrompts = await inquirer.prompt(engineerQuestions());
+      // resets the action to whatever the user chose last
       action = engineerPrompts.action;
+      // add engineer to the team array
       addEngineer(engineerPrompts);
     } else if (action === "Add an intern") {
+      // shows intern questions
       const internPrompts = await inquirer.prompt(internQuestions());
+      // resets the action to whatever the user chose last
       action = internPrompts.action;
+      // add intern to the team array
       addIntern(internPrompts);
     }
 
+    // exit while loop if the user picked this option
     if (action === "Finish building the team") {
       keepAdding = false;
     }
