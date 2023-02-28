@@ -11,6 +11,7 @@ const managerQuestions = require("./lib/manager-questions.js");
 const engineerQuestions = require("./lib/engineer-questions.js");
 const internQuestions = require("./lib/intern-questions.js");
 
+// the array that will have the employees as objects of the appropriate class. this will be passed to the render function below
 const team = [];
 
 // generate unique id
@@ -42,9 +43,11 @@ async function start() {
   addManager(managerPrompts);
 
   // boolean to pass the while loop below to know when to stop the loop
+  // if the user did not click the 'Finish buinding the team' option the while loop runs and add other employees
   let keepAdding =
     managerPrompts.action !== "Finish building the team" ? true : false;
 
+  // stores either "Finish building the team", "Add an engineer" or "Add an intern" for use in the if else blocks
   let action = managerPrompts.action;
 
   while (keepAdding) {
